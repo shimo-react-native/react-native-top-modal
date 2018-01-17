@@ -1,0 +1,5 @@
+rootProject.name = 'Example'
+include ':react-native-top-modal'
+project(':react-native-top-modal').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-top-modal/android')
+
+include ':app'
