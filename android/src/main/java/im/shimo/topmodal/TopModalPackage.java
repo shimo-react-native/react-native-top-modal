@@ -1,7 +1,7 @@
 
-package react-native-top-modal;
+package im.shimo.topmodal;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -10,10 +10,11 @@ import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 import com.facebook.react.bridge.JavaScriptModule;
-public class RNTopModalPackage implements ReactPackage {
+
+public class TopModalPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-      return Arrays.<NativeModule>asList(new RNTopModalModule(reactContext));
+        return Collections.emptyList();
     }
 
     // Deprecated from RN 0.47
@@ -23,6 +24,9 @@ public class RNTopModalPackage implements ReactPackage {
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-      return Collections.emptyList();
+        List<ViewManager> modules = new ArrayList<>();
+        modules.add(new TopModalManager());
+        modules.add(new TopModalContentViewManager());
+        return modules;
     }
 }

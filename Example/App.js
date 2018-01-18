@@ -85,7 +85,7 @@ export default class App extends Component<{}> {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to React Native!
+          react-native-top-modal Example
         </Text>
         <TouchableOpacity
           style={styles.button}

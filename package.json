@@ -10,9 +10,12 @@
   "keywords": [
     "react-native"
   ],
-  "author": "",
-  "license": "",
+  "author": "Bell",
+  "license": "MIT",
+  "dependencies": {
+    "react-native-root-siblings": "*"
+  },
   "peerDependencies": {
-    "react-native": "^0.41.2"
+    "react-native": ">0.42.0"
   }
 }
