@@ -1,20 +1,19 @@
 
 {
   "name": "react-native-top-modal",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "A component upon all views include keyboard for react native.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "react-native"
+    "react-native",
+    "top",
+    "modal"
   ],
   "author": "Bell",
   "license": "MIT",
-  "dependencies": {
-    "react-native-root-siblings": "*"
-  },
   "peerDependencies": {
     "react-native": ">0.42.0"
   }

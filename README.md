@@ -1,6 +1,6 @@
 # react-native-top-modal
 
-The top modal for react native, include the keyboard.
+A component upon all views include keyboard for react native.
 
 ## Installation
 
