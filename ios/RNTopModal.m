@@ -24,6 +24,7 @@
 
 @property (nonatomic, assign) BOOL initialized;
 @property (nonatomic, assign) BOOL presented;
+@property (nonatomic, strong) UIWindow *topWindow;
 
 @end
 
@@ -57,11 +58,9 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder
     
     [_touchHandler attachToView:subview];
     
-    UIWindow *topWindow = [self topWindow];
-    
-    subview.frame = topWindow.bounds;
+    subview.frame = self.topWindow.bounds;
     subview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [topWindow addSubview:subview];
+    [self.topWindow addSubview:subview];
     _contentView = subview;
 }
 
@@ -84,15 +83,22 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder
     dispatch_async(dispatch_get_main_queue(), ^{
         [_contentView removeFromSuperview];
         _contentView = nil;
+        [_topWindow resignKeyWindow];
+        _topWindow = nil;
     });
 }
 
-#pragma mark - Private
+#pragma mark - Getter
 
 - (UIWindow*)topWindow {
-    return [[[UIApplication sharedApplication].windows sortedArrayUsingComparator:^NSComparisonResult(UIWindow *win1, UIWindow *win2) {
-        return win1.windowLevel - win2.windowLevel;
-    }] lastObject];
+    if (!_topWindow) {
+        UIWindow *window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        window.backgroundColor = [UIColor clearColor];
+        window.windowLevel = UIWindowLevelAlert;
+        [window makeKeyAndVisible];
+        _topWindow = window;
+    }
+    return _topWindow;
 }
 
 @end
