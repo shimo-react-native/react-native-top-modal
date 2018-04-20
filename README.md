@@ -17,7 +17,7 @@ import RNTopModal from 'react-native-top-modal';
 export default class App extends Component<{}> {
   render() {
     return (
-      <TopModal style={styles.modal}>
+      <RNTopModal style={styles.modal}>
         <TouchableOpacity
           style={styles.button}
           onPress={this._hideModal}>
@@ -25,7 +25,7 @@ export default class App extends Component<{}> {
             Hide Modal
           </Text>
         </TouchableOpacity>
-      </TopModal>
+      </RNTopModal>
     )
   }
 }
