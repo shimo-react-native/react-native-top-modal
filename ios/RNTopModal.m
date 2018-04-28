@@ -35,6 +35,7 @@
     
     RCTTouchHandler *_touchHandler;
     UIView *_contentView;
+    __weak UIWindow *_oldKeyWindow;
 }
 
 RCT_NOT_IMPLEMENTED(-(instancetype)initWithFrame
@@ -49,6 +50,14 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder
         _bridge = bridge;
         _initialized = NO;
         _touchHandler = [[RCTTouchHandler alloc] initWithBridge:bridge];
+        
+        _oldKeyWindow = [UIApplication sharedApplication].keyWindow;
+        
+        _topWindow = [[UIWindow alloc] initWithFrame:_oldKeyWindow ? _oldKeyWindow.frame : [UIScreen mainScreen].bounds];
+        _topWindow.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _topWindow.backgroundColor = [UIColor clearColor];
+        _topWindow.windowLevel = UIWindowLevelAlert;
+        [_topWindow makeKeyAndVisible];
         
         [self handleOrientationChange];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleOrientationChange) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
@@ -90,22 +99,9 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder
         _contentView = nil;
         [_topWindow resignKeyWindow];
         _topWindow = nil;
+        [_oldKeyWindow makeKeyAndVisible];
     });
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-#pragma mark - Getter
-
-- (UIWindow*)topWindow {
-    if (!_topWindow) {
-        UIWindow *window = [[UIWindow alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.frame];
-        window.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        window.backgroundColor = [UIColor clearColor];
-        window.windowLevel = UIWindowLevelAlert;
-        [window makeKeyAndVisible];
-        _topWindow = window;
-    }
-    return _topWindow;
 }
 
 #pragma mark - Orientation
