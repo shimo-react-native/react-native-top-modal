@@ -20,6 +20,8 @@
 #import <React/RCTUIManagerUtils.h>
 #endif
 
+#define DegreesToRadians(degrees) (degrees * M_PI / 180)
+
 @interface RNTopModal ()
 
 @property (nonatomic, assign) BOOL initialized;
@@ -47,6 +49,9 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder
         _bridge = bridge;
         _initialized = NO;
         _touchHandler = [[RCTTouchHandler alloc] initWithBridge:bridge];
+        
+        [self handleOrientationChange];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleOrientationChange) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
     }
     return self;
 }
@@ -86,19 +91,72 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder
         [_topWindow resignKeyWindow];
         _topWindow = nil;
     });
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - Getter
 
 - (UIWindow*)topWindow {
     if (!_topWindow) {
-        UIWindow *window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        UIWindow *window = [[UIWindow alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.frame];
+        window.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         window.backgroundColor = [UIColor clearColor];
         window.windowLevel = UIWindowLevelAlert;
         [window makeKeyAndVisible];
         _topWindow = window;
     }
     return _topWindow;
+}
+
+#pragma mark - Orientation
+
+/**
+ @see https://stackoverflow.com/a/31556970/6283925
+ */
+- (void)handleOrientationChange {
+    if (self.topWindow) {
+        // rotate the UIWindow manually
+        UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+        [self.topWindow setTransform:[self transformForOrientation:orientation]];
+        
+        // resize the UIWindow according to the new screen size
+        if ([[UIScreen mainScreen] respondsToSelector:@selector(nativeBounds)]) {
+            // iOS 8 and later
+            CGRect screenRect = [UIScreen mainScreen].nativeBounds;
+            CGRect topWindowFrame = self.topWindow.frame;
+            topWindowFrame.origin.x = 0;
+            topWindowFrame.origin.y = 0;
+            topWindowFrame.size.width = screenRect.size.width / [UIScreen mainScreen].nativeScale;
+            topWindowFrame.size.height = screenRect.size.height / [UIScreen mainScreen].nativeScale;
+            self.topWindow.frame = topWindowFrame;
+        } else {
+            // iOs 7 or below
+            CGRect screenRect = [UIScreen mainScreen].bounds;
+            CGRect topWindowFrame = self.topWindow.frame;
+            topWindowFrame.origin.x = 0;
+            topWindowFrame.origin.y = 0;
+            topWindowFrame.size.width = screenRect.size.width;
+            topWindowFrame.size.height = screenRect.size.height;
+            self.topWindow.frame = topWindowFrame;
+        }
+    }
+}
+
+- (CGAffineTransform)transformForOrientation:(UIInterfaceOrientation)orientation {
+    switch (orientation) {
+        case UIInterfaceOrientationLandscapeLeft:
+            return CGAffineTransformMakeRotation(-DegreesToRadians(90));
+            
+        case UIInterfaceOrientationLandscapeRight:
+            return CGAffineTransformMakeRotation(DegreesToRadians(90));
+            
+        case UIInterfaceOrientationPortraitUpsideDown:
+            return CGAffineTransformMakeRotation(DegreesToRadians(180));
+            
+        case UIInterfaceOrientationPortrait:
+        default:
+            return CGAffineTransformMakeRotation(DegreesToRadians(0));
+    }
 }
 
 @end
