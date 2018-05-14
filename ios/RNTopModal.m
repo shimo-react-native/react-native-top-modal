@@ -51,8 +51,8 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder
         _touchHandler = [[RCTTouchHandler alloc] initWithBridge:bridge];
         
         UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
-        
         _topWindow = [[UIWindow alloc] initWithFrame:keyWindow ? keyWindow.frame : [UIScreen mainScreen].bounds];
+        _topWindow.rootViewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
         _topWindow.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _topWindow.backgroundColor = [UIColor clearColor];
         _topWindow.windowLevel = UIWindowLevelAlert;
@@ -73,16 +73,16 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder
     
     subview.frame = self.topWindow.bounds;
     subview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.topWindow addSubview:subview];
+    [self.topWindow.rootViewController.view addSubview:subview];
     _contentView = subview;
 }
 
 - (void)removeReactSubview:(UIView *)subview {
     RCTAssert(subview == _contentView, @"Cannot remove view other than modal view");
-    [super removeReactSubview:subview];
+    [super removeReactSubview:_contentView];
     
-    [_touchHandler detachFromView:subview];
-    [subview removeFromSuperview];
+    [_touchHandler detachFromView:_contentView];
+    [_contentView removeFromSuperview];
     _contentView = nil;
 }
 
@@ -96,7 +96,6 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder
     dispatch_async(dispatch_get_main_queue(), ^{
         [_contentView removeFromSuperview];
         _contentView = nil;
-        [_topWindow resignKeyWindow];
         _topWindow = nil;
     });
     [[NSNotificationCenter defaultCenter] removeObserver:self];
