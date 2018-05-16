@@ -44,7 +44,7 @@ export default class extends Component {
     return (
       <RNTopModal
         style={styles.topModal}
-        keyWindow>
+        keyWindow={keyWindow}>
         {
           Platform.OS === 'android' ? (
             <TopModalContentView
