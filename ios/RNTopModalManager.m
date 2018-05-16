@@ -24,6 +24,8 @@ RCT_EXPORT_MODULE();
     return view;
 }
 
+RCT_EXPORT_VIEW_PROPERTY(keyWindow, BOOL)
+
 #pragma mark - RCTInvalidating
 
 - (void)invalidate {

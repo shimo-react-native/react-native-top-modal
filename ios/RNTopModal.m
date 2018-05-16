@@ -48,6 +48,7 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder
     if ((self = [super initWithFrame:CGRectZero])) {
         _bridge = bridge;
         _initialized = NO;
+        _keyWindow = NO;
         _touchHandler = [[RCTTouchHandler alloc] initWithBridge:bridge];
         
         UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
@@ -56,7 +57,6 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder
         _topWindow.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _topWindow.backgroundColor = [UIColor clearColor];
         _topWindow.windowLevel = UIWindowLevelAlert;
-        // do not use makeKeyAndVisible, or keyboard will dismiss in iPad.
         [_topWindow setHidden:NO];
     }
     return self;
@@ -88,12 +88,28 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder
     // Do nothing, as subview (singular) is managed by `insertReactSubview:atIndex:`
 }
 
+#pragma mark - Setter
+
+- (void)setKeyWindow:(BOOL)keyWindow {
+    if (_keyWindow != keyWindow) {
+        _keyWindow = keyWindow;
+    }
+    if (_keyWindow) {
+        [_topWindow makeKeyWindow];
+    } else {
+        [_topWindow resignKeyWindow];
+    }
+}
+
 #pragma mark - RCTInvalidating
 
 - (void)invalidate {
     dispatch_async(dispatch_get_main_queue(), ^{
         [_contentView removeFromSuperview];
         _contentView = nil;
+        if (_topWindow.keyWindow) {
+            [_topWindow resignKeyWindow];
+        }
         _topWindow = nil;
     });
     [[NSNotificationCenter defaultCenter] removeObserver:self];

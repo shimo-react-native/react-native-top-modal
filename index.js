@@ -22,15 +22,20 @@ export default class extends Component {
     /**
      * The `visible` prop determines whether your topModal is visible.
      */
-    visible: PropTypes.bool
+    visible: PropTypes.bool,
+    /**
+     * The `keyWindow` prop determines whether the window for your topModal will be key window in iOS.
+     */
+    keyWindow: PropTypes.bool
   };
 
   static defaultProps = {
-    visible: true
+    visible: true,
+    keyWindow: false
   };
 
   render() {
-    const {style, visible, children, props} = this.props;
+    const {style, visible, keyWindow, children, props} = this.props;
 
     if (visible === false) {
       return null;
@@ -38,7 +43,8 @@ export default class extends Component {
 
     return (
       <RNTopModal
-        style={styles.topModal}>
+        style={styles.topModal}
+        keyWindow>
         {
           Platform.OS === 'android' ? (
             <TopModalContentView
