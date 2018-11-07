@@ -69,7 +69,7 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder
     
     [_touchHandler attachToView:subview];
     
-    subview.frame = self.topWindow.bounds;
+    subview.frame = self.topWindow.rootViewController.view.bounds;
     subview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.topWindow.rootViewController.view addSubview:subview];
     _contentView = subview;
