@@ -1,6 +1,6 @@
 import React, {Component, Children} from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, requireNativeComponent, I18nManager, View, Platform, Dimensions } from 'react-native';
+import {StyleSheet, requireNativeComponent, I18nManager, View, Platform, Dimensions} from 'react-native';
 
 const RNTopModal = requireNativeComponent(Platform.OS === 'ios' ? 'RNTopModal' : 'TopModal');
 const TopModalContentView = requireNativeComponent('TopModalContentView');
@@ -39,7 +39,6 @@ export default class extends Component {
       windowWidth: window.width,
       windowHeight: window.height,
     }
-    // 监听屏幕高度变化
     Dimensions.addEventListener('change', this._screenChange);
   }
 
