@@ -1,6 +1,6 @@
 import React, {Component, Children} from 'react';
 import PropTypes from 'prop-types';
-import {StyleSheet, requireNativeComponent, I18nManager, View, Platform} from 'react-native';
+import {StyleSheet, requireNativeComponent, I18nManager, View, Platform, Dimensions} from 'react-native';
 
 const RNTopModal = requireNativeComponent(Platform.OS === 'ios' ? 'RNTopModal' : 'TopModal');
 const TopModalContentView = requireNativeComponent('TopModalContentView');
@@ -10,8 +10,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     overflow: 'hidden',
     top: 0,
-    right: 0,
-    bottom: 0,
     left: 0
   }
 });
@@ -34,8 +32,26 @@ export default class extends Component {
     keyWindow: false
   };
 
+  constructor(props) {
+    super(props);
+    const window = Dimensions.get('window');
+    this.state = {
+      windowWidth: window.width,
+      windowHeight: window.height,
+    }
+    Dimensions.addEventListener('change', this._screenChange);
+  }
+
+  _screenChange = ({ screen, window }) => {
+    this.setState({
+      windowWidth: window.width,
+      windowHeight: window.height
+    })
+  };
+
   render() {
     const {style, visible, keyWindow, children, props} = this.props;
+    const { windowWidth, windowHeight } = this.state;
 
     if (visible === false) {
       return null;
@@ -43,7 +59,7 @@ export default class extends Component {
 
     return (
       <RNTopModal
-        style={styles.topModal}
+        style={[styles.topModal, {width: windowWidth, height: windowHeight}]}
         keyWindow={keyWindow}>
         {
           Platform.OS === 'android' ? (
