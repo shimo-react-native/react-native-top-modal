@@ -37,6 +37,10 @@ class TopModalContentView extends ReactViewGroup implements RootView {
         mJSTouchDispatcher.onChildStartedNativeGesture(androidEvent, getEventDispatcher());
     }
 
+    public void handleException(Throwable t) {
+
+    }
+
     @Override
     public void requestDisallowInterceptTouchEvent(boolean disallowIntercept) {
         // No-op - override in order to still receive events to onInterceptTouchEvent
