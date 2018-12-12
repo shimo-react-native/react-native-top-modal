@@ -2,9 +2,9 @@ require 'json'
 version = JSON.parse(File.read('package.json'))["version"]
 
 Pod::Spec.new do |s|
-  s.name             = 'RNDocPreview'
+  s.name             = 'TNTopModal'
   s.version          = version
-  s.summary          = 'react-native-doc-preview'
+  s.summary          = 'react-native-top-modal'
 
   s.description      = <<-DESC
 TODO: Add long description of the pod here.
