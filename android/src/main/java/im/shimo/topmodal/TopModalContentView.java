@@ -51,4 +51,9 @@ class TopModalContentView extends ReactViewGroup implements RootView {
         ReactContext reactContext = (ReactContext) getContext();
         return reactContext.getNativeModule(UIManagerModule.class).getEventDispatcher();
     }
+
+    @Override
+    public void handleException(Throwable t) {
+
+    }
 }
