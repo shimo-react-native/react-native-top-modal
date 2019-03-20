@@ -1,6 +1,6 @@
 {
   "name": "react-native-top-modal",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "A component upon all views include keyboard for react native.",
   "main": "index.js",
   "keywords": [
